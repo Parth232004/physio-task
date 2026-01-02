@@ -1,0 +1,5 @@
+# AI Assistant Requirements
+# This project uses only Python standard library
+# No external dependencies required
+
+python>=3.6
