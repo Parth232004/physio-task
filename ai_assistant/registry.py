@@ -25,9 +25,22 @@ class ToolRegistry:
             return "Invalid calculation."
 
     def mock_summarizer(self, text):
-        # Mock summary
-        return f"Summary of '{text}': This is a summarized version."
+        # Basic mock summary: return first 50 characters or key phrases
+        words = text.split()
+        if len(words) > 10:
+            summary = ' '.join(words[:10]) + '...'
+        else:
+            summary = text
+        return f"Summary: {summary}"
 
     def mock_planner(self, task):
-        # Mock planning
-        return f"Plan for '{task}': Step 1, Step 2, Done."
+        # Basic mock planning: break into steps based on keywords
+        steps = []
+        if 'analyze' in task.lower():
+            steps = ["Gather data", "Identify patterns", "Generate insights"]
+        elif 'calculate' in task.lower():
+            steps = ["Parse input", "Perform calculation", "Return result"]
+        else:
+            steps = ["Define objective", "Execute task", "Review outcome"]
+        plan = f"Plan for '{task}':\n" + '\n'.join(f"- {step}" for step in steps)
+        return plan
