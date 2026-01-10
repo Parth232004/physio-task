@@ -1,27 +1,43 @@
 from router import classify_intent
 from manager import ContextManager
 from registry import ToolRegistry
+from queue import QueueManager
 
 class ResponseEngine:
     def __init__(self):
         self.context_manager = ContextManager()
         self.tool_registry = ToolRegistry()
+        self.queue_manager = QueueManager()
 
     def generate_response(self, user_input):
         """
         Generate a response based on user input, intent, and context.
         """
-        intent = classify_intent(user_input)
-        context = self.context_manager.get_context()
-
-        if intent == 'Q&A':
-            response = self.handle_qa(user_input, context)
-        elif intent == 'Task request':
-            response = self.handle_task(user_input, context)
-        elif intent == 'Analysis request':
-            response = self.handle_analysis(user_input, context)
+        # Check for defer decision
+        if len(user_input.split()) < 3:
+            decision = 'defer'
         else:
-            response = "I'm sorry, I didn't understand that."
+            decision = 'process'
+
+        if decision == 'defer':
+            self.queue_manager.add_to_queue({
+                'id': f"defer_{len(self.queue_manager.queue)}",
+                'user_input': user_input,
+                'reason': 'Too short input'
+            })
+            response = "Your request has been queued for later processing."
+        else:
+            intent = classify_intent(user_input)
+            context = self.context_manager.get_context()
+
+            if intent == 'Q&A':
+                response = self.handle_qa(user_input, context)
+            elif intent == 'Task request':
+                response = self.handle_task(user_input, context)
+            elif intent == 'Analysis request':
+                response = self.handle_analysis(user_input, context)
+            else:
+                response = "I'm sorry, I didn't understand that."
 
         # Add to context
         self.context_manager.add_turn(user_input, response)
