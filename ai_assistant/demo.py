@@ -19,6 +19,7 @@ def main():
 
         # Generate response
         response = engine.generate_response(user_input)
+        print(f"[LOG] Response generated via {intent} handler")
         print(f"Assistant: {response}")
 
 if __name__ == "__main__":

@@ -11,7 +11,6 @@ This repository contains a simple AI Assistant implementation with intent classi
 │   ├── manager.py        # Context management
 │   ├── engine.py         # Response orchestration
 │   ├── registry.py       # Tool registry with mocks
-│   ├── queue.py          # Queue management for deferred requests
 │   ├── demo.py           # CLI demo script
 │   └── README.md         # Component documentation
 ├── tests/                # Test suite
@@ -33,7 +32,6 @@ This repository contains a simple AI Assistant implementation with intent classi
 - **Manager**: Maintains conversation context (last 10 turns)
 - **Engine**: Orchestrates responses based on intent and context
 - **Registry**: Provides mock tools (calculator, summarizer, planner)
-- **Queue**: Handles deferred requests with file-based persistence
 
 ## FAQ for Future Developers
 
@@ -46,8 +44,6 @@ A: Yes, replace mock functions in `registry.py` with actual implementations. Upd
 ### Q: How is context managed?
 A: The `ContextManager` stores the last 10 conversation turns. Modify `max_turns` in `__init__` to change the limit.
 
-### Q: What happens with deferred requests?
-A: Short inputs (< 3 words) are queued in `queue.json`. Use `QueueManager.reprocess_queue()` to handle them.
 
 ### Q: How do I extend the system?
 A: Add new intents in `router.py`, handlers in `engine.py`, and tools in `registry.py`. Update tests in `tests/test_orchestrator_v3.py`.
